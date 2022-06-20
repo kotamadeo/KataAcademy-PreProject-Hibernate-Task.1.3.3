@@ -32,4 +32,9 @@ public class UserServiceImpl implements UserService {
     public void cleanUsersTable() {
         userDao.cleanUsersTable();
     }
+
+    @Override
+    public void close() {
+        userDao.close();
+    }
 }

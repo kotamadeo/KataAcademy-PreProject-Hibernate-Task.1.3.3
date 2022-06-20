@@ -15,4 +15,6 @@ public interface UserService {
     List<User> getAllUsers();
 
     void cleanUsersTable();
+
+    void close();
 }

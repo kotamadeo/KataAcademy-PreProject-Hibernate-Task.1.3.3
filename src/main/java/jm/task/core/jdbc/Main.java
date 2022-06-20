@@ -20,6 +20,7 @@ public class Main {
         userService.removeUserById(1);
         userService.cleanUsersTable();
         userService.dropUsersTable();
+        userService.close();
     }
 
     private static void printUsers(List<User> users) {
