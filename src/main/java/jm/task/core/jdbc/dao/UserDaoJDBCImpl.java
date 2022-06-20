@@ -9,7 +9,7 @@ import java.util.List;
 
 
 public class UserDaoJDBCImpl implements UserDao {
-    private final Connection connection = Util.connectToBD();
+    private final Connection connection = Util.getInstance().getConnection();
 
     public UserDaoJDBCImpl() {
     }
@@ -22,7 +22,7 @@ public class UserDaoJDBCImpl implements UserDao {
             connection.commit();
             System.out.println("Таблица пользователей создана!");
         } catch (SQLException e) {
-            close();
+            connectionRollback();
             throw new RuntimeException(e);
         }
     }
@@ -33,7 +33,7 @@ public class UserDaoJDBCImpl implements UserDao {
             statement.executeUpdate("DROP TABLE IF EXISTS пользователи");
             System.out.println("Таблица пользователей сброшена!");
         } catch (SQLException e) {
-            close();
+            connectionRollback();
             throw new RuntimeException(e);
         }
     }
@@ -55,7 +55,7 @@ public class UserDaoJDBCImpl implements UserDao {
                 System.out.printf("Пользователь %s %s добавлен в базу данных!%n", name, lastName);
             }
         } catch (SQLException e) {
-            close();
+            connectionRollback();
             throw new RuntimeException(e);
         }
     }
@@ -68,7 +68,7 @@ public class UserDaoJDBCImpl implements UserDao {
             connection.commit();
             System.out.println("Пользователь удален!");
         } catch (SQLException e) {
-            close();
+            connectionRollback();
             throw new RuntimeException(e);
         }
     }
@@ -86,7 +86,7 @@ public class UserDaoJDBCImpl implements UserDao {
                 users.add(user);
             }
         } catch (SQLException e) {
-            close();
+            connectionRollback();
             throw new RuntimeException(e);
         }
         return users;
@@ -99,19 +99,16 @@ public class UserDaoJDBCImpl implements UserDao {
             System.out.println("Таблица очищена!");
             connection.commit();
         } catch (SQLException e) {
-            close();
+            connectionRollback();
             throw new RuntimeException(e);
         }
     }
 
-    public void close() {
-        if (connection != null) {
-            try {
-                connection.close();
-                System.out.println("Закрыли соединение с БД!");
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
+    public void connectionRollback() {
+        try {
+            connection.rollback();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 }

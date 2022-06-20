@@ -17,5 +17,5 @@ public interface UserDao {
 
     void cleanUsersTable();
 
-    void close();
+    void connectionRollback();
 }
