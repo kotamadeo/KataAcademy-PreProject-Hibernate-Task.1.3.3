@@ -55,8 +55,10 @@ public class UserDaoHibernateImpl implements UserDao {
                 System.out.printf("К сожалению, пользователь %s %s не добавлен в базу данных! " +
                         "Возможно, какие-то данные пусты или введены неверно!%n", name, lastName);
             } else {
+                /* вариация sql в рамках hibernate:
                 session.createSQLQuery("INSERT INTO пользователи (name, lastName, age) " +
-                        "VALUES ('" + name + "', '" + lastName + "', '" + age + "')").executeUpdate();
+                        "VALUES ('" + name + "', '" + lastName + "', '" + age + "')").executeUpdate(); */
+                session.persist(new User(name, lastName, age));
                 transaction.commit();
                 System.out.printf("Пользователь %s %s добавлен в базу данных!%n", name, lastName);
             }
@@ -86,8 +88,7 @@ public class UserDaoHibernateImpl implements UserDao {
         try {
             Session session = Util.getSessionFactory().getCurrentSession();
             transaction = session.beginTransaction();
-            users = (List<User>) session.createSQLQuery("SELECT * FROM пользователи")
-                    .addEntity(User.class)
+            users = (List<User>) session.createQuery("FROM User")
                     .getResultList();
             transaction.commit();
         } catch (Exception e) {
