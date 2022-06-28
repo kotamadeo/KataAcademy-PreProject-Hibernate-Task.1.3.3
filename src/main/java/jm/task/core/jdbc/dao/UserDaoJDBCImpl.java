@@ -44,7 +44,7 @@ public class UserDaoJDBCImpl implements UserDao {
                 "(имя, фамилия, возраст) VALUES (?, ?, ?)")) {
             connection.setAutoCommit(false);
             if (name == null || lastName == null || age <= 0) {
-                connection.rollback();
+               connectionRollback();
                 System.out.printf("К сожалению, пользователь %s %s не добавлен в базу данных! " +
                         "Возможно, какие-то данные пусты или введены неверно!%n", name, lastName);
             } else {
@@ -105,6 +105,7 @@ public class UserDaoJDBCImpl implements UserDao {
         }
     }
 
+    @Override
     public void connectionRollback() {
         try {
             connection.rollback();
