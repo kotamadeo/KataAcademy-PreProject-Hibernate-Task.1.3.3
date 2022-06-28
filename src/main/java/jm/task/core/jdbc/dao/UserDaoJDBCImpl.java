@@ -31,6 +31,7 @@ public class UserDaoJDBCImpl implements UserDao {
         try (Statement statement = connection.createStatement()) {
             connection.setAutoCommit(false);
             statement.executeUpdate("DROP TABLE IF EXISTS пользователи");
+            connection.commit();
             System.out.println("Таблица пользователей сброшена!");
         } catch (SQLException e) {
             connectionRollback();
