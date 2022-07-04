@@ -37,11 +37,7 @@ public class UserServiceImpl implements UserService {
     }
 
     public void cleanUsersTable() {
-<<<<<<< HEAD
-        userDao.cleanUsersTable();
-=======
         //jdbc.cleanUsersTable();
         hibernate.cleanUsersTable();
->>>>>>> hibernate
     }
 }

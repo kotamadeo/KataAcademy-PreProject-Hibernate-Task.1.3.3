@@ -22,7 +22,7 @@ public class UserDaoHibernateImpl implements UserDao {
             Session session = Util.getSessionFactory().getCurrentSession();
             transaction = session.beginTransaction();
             session.createSQLQuery("CREATE TABLE IF NOT EXISTS пользователи (id BIGINT PRIMARY KEY AUTO_INCREMENT, " +
-                    "name CHAR(30), lastName CHAR(30), age TINYINT CHECK (age < 128))").executeUpdate();
+                    "имя CHAR(30), фамилия CHAR(30), возраст TINYINT CHECK (возраст < 128))").executeUpdate();
             transaction.commit();
             System.out.println("Таблица пользователей создана!");
         } catch (Exception e) {

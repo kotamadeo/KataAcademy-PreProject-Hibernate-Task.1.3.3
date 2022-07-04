@@ -5,7 +5,6 @@ import org.hibernate.SessionFactory;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.AvailableSettings;
 import org.hibernate.cfg.Configuration;
-import org.hibernate.cfg.Environment;
 import org.hibernate.service.ServiceRegistry;
 
 import java.sql.Connection;
@@ -16,7 +15,7 @@ import java.util.Properties;
 
 public class Util {
     private static Util instance;
-    private Connection connection;
+    private final Connection connection;
     private static final String USERNAME = "root";
     private static final String PASSWORD = "Ahrilovescat1@";
     private static final String CONNECTION_URL = "jdbc:mysql://localhost:3306/usersdb?autoReconnect=true&useSSL=false";

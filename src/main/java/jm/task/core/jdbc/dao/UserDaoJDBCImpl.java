@@ -3,7 +3,10 @@ package jm.task.core.jdbc.dao;
 import jm.task.core.jdbc.model.User;
 import jm.task.core.jdbc.util.Util;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,10 +18,10 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public void createUsersTable() {
-        try (Statement statement = connection.createStatement()) {
+        try (PreparedStatement statement = connection.prepareStatement("CREATE TABLE IF NOT EXISTS пользователи " +
+                "(id BIGINT PRIMARY KEY AUTO_INCREMENT, имя CHAR(30), фамилия CHAR(30), возраст TINYINT CHECK (возраст < 128))")) {
             connection.setAutoCommit(false);
-            statement.executeUpdate("CREATE TABLE IF NOT EXISTS пользователи " +
-                    "(id BIGINT PRIMARY KEY AUTO_INCREMENT, имя CHAR(30), фамилия CHAR(30), возраст TINYINT CHECK (возраст < 128))");
+            statement.executeUpdate();
             connection.commit();
             System.out.println("Таблица пользователей создана!");
         } catch (SQLException e) {
@@ -28,9 +31,9 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public void dropUsersTable() {
-        try (Statement statement = connection.createStatement()) {
+        try (PreparedStatement statement = connection.prepareStatement("DROP TABLE IF EXISTS пользователи")) {
             connection.setAutoCommit(false);
-            statement.executeUpdate("DROP TABLE IF EXISTS пользователи");
+            statement.executeUpdate();
             connection.commit();
             System.out.println("Таблица пользователей сброшена!");
         } catch (SQLException e) {
@@ -44,7 +47,7 @@ public class UserDaoJDBCImpl implements UserDao {
                 "(имя, фамилия, возраст) VALUES (?, ?, ?)")) {
             connection.setAutoCommit(false);
             if (name == null || lastName == null || age <= 0) {
-               connectionRollback();
+                connectionRollback();
                 System.out.printf("К сожалению, пользователь %s %s не добавлен в базу данных! " +
                         "Возможно, какие-то данные пусты или введены неверно!%n", name, lastName);
             } else {
@@ -76,8 +79,8 @@ public class UserDaoJDBCImpl implements UserDao {
 
     public List<User> getAllUsers() {
         List<User> users = new ArrayList<>();
-        try (Statement statement = connection.createStatement()) {
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM пользователи");
+        try (PreparedStatement statement = connection.prepareStatement("SELECT * FROM пользователи")) {
+            ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 User user = new User();
                 user.setId(resultSet.getLong("id"));
@@ -94,9 +97,9 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public void cleanUsersTable() {
-        try (Statement statement = connection.createStatement()) {
+        try (PreparedStatement statement = connection.prepareStatement("TRUNCATE TABLE пользователи")) {
             connection.setAutoCommit(false);
-            statement.executeUpdate("TRUNCATE TABLE пользователи");
+            statement.executeUpdate();
             System.out.println("Таблица очищена!");
             connection.commit();
         } catch (SQLException e) {
